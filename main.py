@@ -44,10 +44,10 @@ def create_shedule_photo(user_id, tour, div, game, commands):
     text_color = (255, 255, 255)
     draw.text((32, 43), tour_text, font=font, fill=text_color)
 
-    font = ImageFont.truetype(font=FONT_PATH, size=15)
+    font = ImageFont.truetype(font=FONT_PATH, size=18)
 
     x = 120
-    y = 267
+    y = 265
     for item in commands[:8]:
         draw.text((x, y), item[0], font=font, fill=text_color)
         draw.text((x + 328, y), item[1], font=font, fill=text_color)
@@ -71,7 +71,7 @@ def create_shedule_photo(user_id, tour, div, game, commands):
         text_color = (255, 255, 255)
         font = ImageFont.truetype(font=FONT_PATH, size=34)
         draw.text((32, 43), tour_text, font=font, fill=text_color)
-        font = ImageFont.truetype(font=FONT_PATH, size=16)
+        font = ImageFont.truetype(font=FONT_PATH, size=18)
         x = 112
         y = 154
         for item in commands[first:first + 8]:
