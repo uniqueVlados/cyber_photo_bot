@@ -40,11 +40,11 @@ def create_shedule_photo(user_id, tour, div, game, commands):
 
     tour_text = tour
     draw = ImageDraw.Draw(base)
-    font = ImageFont.truetype(FONT_PATH, size=34)
+    font = ImageFont.truetype(font=FONT_PATH, size=34)
     text_color = (255, 255, 255)
     draw.text((32, 43), tour_text, font=font, fill=text_color)
 
-    font = ImageFont.truetype(FONT_PATH, size=15)
+    font = ImageFont.truetype(font=FONT_PATH, size=15)
 
     x = 120
     y = 267
@@ -69,9 +69,9 @@ def create_shedule_photo(user_id, tour, div, game, commands):
         base = Image.open("img/shedule.png")
         draw = ImageDraw.Draw(base)
         text_color = (255, 255, 255)
-        font = ImageFont.truetype(FONT_PATH, size=34)
+        font = ImageFont.truetype(font=FONT_PATH, size=34)
         draw.text((32, 43), tour_text, font=font, fill=text_color)
-        font = ImageFont.truetype(FONT_PATH, size=16)
+        font = ImageFont.truetype(font=FONT_PATH, size=16)
         x = 112
         y = 154
         for item in commands[first:first + 8]:
@@ -98,11 +98,11 @@ def create_rating_photo(user_id, tour, div, game, commands):
 
     tour_text = tour
     draw = ImageDraw.Draw(base)
-    font = ImageFont.truetype(FONT_PATH, size=34)
+    font = ImageFont.truetype(font=FONT_PATH, size=34)
     text_color = (255, 255, 255)
     draw.text((32, 43), tour_text, font=font, fill=text_color)
 
-    font = ImageFont.truetype(FONT_PATH, size=20)
+    font = ImageFont.truetype(font=FONT_PATH, size=20)
 
     x = 165
     y = 305
@@ -131,9 +131,9 @@ def create_rating_photo(user_id, tour, div, game, commands):
         base = Image.open("img/rating.png")
         draw = ImageDraw.Draw(base)
         text_color = (255, 255, 255)
-        font = ImageFont.truetype(FONT_PATH, size=34)
+        font = ImageFont.truetype(font=FONT_PATH, size=34)
         draw.text((32, 43), tour_text, font=font, fill=text_color)
-        font = ImageFont.truetype(FONT_PATH, size=22)
+        font = ImageFont.truetype(font=FONT_PATH, size=22)
         x = 172
         y = 125
         for item in commands[first:first + 8]:
