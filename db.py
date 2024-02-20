@@ -12,7 +12,8 @@ class Db:
 
         self.cursor.execute(''' CREATE TABLE IF NOT EXISTS users (
         tg_id INTEGER,
-        state TEXT);
+        state TEXT,
+        last_time TEXT);
         ''')
 
         self.conn.commit()
@@ -34,6 +35,17 @@ class Db:
 
     def get_state_user(self, tg_id):
         sql = f"SELECT state FROM users WHERE tg_id={tg_id}"
+        self.cursor.execute(sql)
+        result = self.cursor.fetchone()
+        return result[0]
+
+    def set_last_time_user(self, tg_id, last_time):
+        sql = '''UPDATE users SET last_time = ? WHERE tg_id = ?'''
+        self.cursor.execute(sql, (last_time, tg_id))
+        self.conn.commit()
+
+    def get_last_time_user(self, tg_id):
+        sql = f"SELECT last_time FROM users WHERE tg_id={tg_id}"
         self.cursor.execute(sql)
         result = self.cursor.fetchone()
         return result[0]

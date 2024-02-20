@@ -22,16 +22,26 @@ db_client = Db("users.db")
 # BUTTONS
 SHEDULE_BTN = KeyboardButton('Расписание📅')
 RATING_BTN = KeyboardButton('Рейтинг📉')
+TIME_YES_BTN = KeyboardButton('ДА ✅')
+TIME_NO_BTN = KeyboardButton('НЕТ ❌')
 
 # KEYBOARDS
 MAIN_KB = ReplyKeyboardMarkup(resize_keyboard=True)
 MAIN_KB.add(SHEDULE_BTN, RATING_BTN)
+TIME_KB = ReplyKeyboardMarkup(resize_keyboard=True)
+TIME_KB.add(TIME_YES_BTN, TIME_NO_BTN)
 
 # CONST
 FONT_PATH = "resources/fonts/main.ttf"
 
 
 def create_shedule_photo(user_id, tour, div, game, commands):
+    shedule_time = db_client.get_last_time_user(user_id)
+    font_time = ImageFont.truetype(font=FONT_PATH, size=15)
+    if shedule_time:
+        day = db_client.get_last_time_user(user_id).split()[0].lower()
+        time = "   " + db_client.get_last_time_user(user_id).split()[1].lower()
+
     base = Image.open("img/shedule_main.png")
     game_p = Image.open(f"img/{game}.png").convert('RGBA').resize((140, 140))
     div_p = Image.open(f"img/{div}.png").convert('RGBA').resize((140, 140))
@@ -50,6 +60,9 @@ def create_shedule_photo(user_id, tour, div, game, commands):
     y = 265
     for item in commands[:8]:
         draw.text((x, y), item[0], font=font, fill=text_color)
+        if shedule_time:
+            draw.text((x + 235, y - 9), day, font=font_time, fill=text_color)
+            draw.text((x + 235, y + 11), time, font=font_time, fill=text_color)
         draw.text((x + 328, y), item[1], font=font, fill=text_color)
         y += 54
 
@@ -58,6 +71,9 @@ def create_shedule_photo(user_id, tour, div, game, commands):
         y = 268
         for item in commands[8:16]:
             draw.text((x, y), item[0], font=font, fill=text_color)
+            if shedule_time:
+                draw.text((x + 235, y - 7), day, font=font_time, fill=text_color)
+                draw.text((x + 235, y + 11), time, font=font_time, fill=text_color)
             draw.text((x + 328, y), item[1], font=font, fill=text_color)
             y += 54
 
@@ -76,6 +92,9 @@ def create_shedule_photo(user_id, tour, div, game, commands):
         y = 154
         for item in commands[first:first + 8]:
             draw.text((x, y), str(item[0]), font=font, fill=text_color)
+            if shedule_time:
+                draw.text((x + 235, y - 7), day, font=font_time, fill=text_color)
+                draw.text((x + 235, y + 11), time, font=font_time, fill=text_color)
             draw.text((x + 320, y), str(item[1]), font=font, fill=text_color)
             y += 54
         first += 8
@@ -83,6 +102,9 @@ def create_shedule_photo(user_id, tour, div, game, commands):
         y = 154
         for item in commands[first:first + 8]:
             draw.text((x, y), str(item[0]), font=font, fill=text_color)
+            if shedule_time:
+                draw.text((x + 235, y - 7), day, font=font_time, fill=text_color)
+                draw.text((x + 235, y + 11), time, font=font_time, fill=text_color)
             draw.text((x + 320, y), str(item[1]), font=font, fill=text_color)
             y += 54
         first += 8
@@ -191,6 +213,30 @@ async def start(message: types.Message):
 async def btn_check(message: types.Message):
     user_id = int(message.from_user.id)
     if message.text == 'Расписание📅' and db_client.get_state_user(user_id) == "start":
+        db_client.set_state_user(user_id, "shedule_time")
+        await message.reply("Хочешь проставить время для матчей❓\n©У всех пар оно будет одинаковым.",
+                            reply_markup=TIME_KB)
+
+    elif db_client.get_state_user(user_id) == "shedule_time_input":
+        db_client.set_last_time_user(user_id, message.text)
+        db_client.set_state_user(user_id, "shedule")
+        await message.reply(
+            f"Запомнил✅\n\n"
+            f"Отправь мне файл с таблицей (один лист)\n"
+            f"⬇Написать в таблице можно лишь эти данные в нужных ячейках⬇\n\n"
+            f"🔴Дивизионы: small/middle/college\n\n"
+            f"🔴Дисциплины: caliber/chess/cs/dota/fallguys/fifa/fortnite/lol/mlbb/pubg/standoff/valorant\n\n"
+            f"Вот пример👇",
+            reply_markup=ReplyKeyboardRemove())
+        with open("resources/shedule.xlsx", 'rb') as f:
+            await bot.send_document(user_id, document=f)
+    elif message.text == 'ДА ✅' and db_client.get_state_user(user_id) == "shedule_time":
+        db_client.set_state_user(user_id, "shedule_time_input")
+        await message.reply("Введи время в формате\n\n➡   day hh:mm   ⬅\n\n☑Пример: среда 17:00",
+                            reply_markup=ReplyKeyboardRemove())
+
+    elif message.text == 'НЕТ ❌' and db_client.get_state_user(user_id) == "shedule_time":
+        db_client.set_last_time_user(user_id, None)
         db_client.set_state_user(user_id, "shedule")
         await message.reply(
             f"Отправь мне файл с таблицей (один лист)\n"
@@ -201,6 +247,7 @@ async def btn_check(message: types.Message):
             reply_markup=ReplyKeyboardRemove())
         with open("resources/shedule.xlsx", 'rb') as f:
             await bot.send_document(user_id, document=f)
+
     elif message.text == 'Рейтинг📉' and db_client.get_state_user(user_id) == "start":
         db_client.set_state_user(user_id, "rating")
         await message.reply(
