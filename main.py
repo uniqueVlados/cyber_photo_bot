@@ -227,7 +227,7 @@ async def btn_check(message: types.Message):
             f"Отправь мне файл с таблицей (один лист)\n"
             f"⬇Написать в таблице можно лишь эти данные в нужных ячейках⬇\n\n"
             f"🔴Дивизионы: small/middle/college\n\n"
-            f"🔴Дисциплины: caliber/chess/cs/dota/fallguys/fifa/fortnite/lol/mlbb/pubg/standoff/valorant\n\n"
+            f"🔴Дисциплины: caliber/chess/cs/dota/fallguys/fifa/fortnite/lol/mlbb/pubg/standoff/valorant/tanks\n\n"
             f"Вот пример👇",
             reply_markup=ReplyKeyboardRemove())
         with open("resources/shedule.xlsx", 'rb') as f:
