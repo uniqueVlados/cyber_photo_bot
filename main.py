@@ -15,7 +15,7 @@ from db import Db
 
 load_dotenv()
 
-API_TOKEN = str(os.getenv('TOKEN'))
+API_TOKEN = "6127934377:AAH4cZn1sXhbS63BhCBmHuQFs-oJ6J7wqZI" #str(os.getenv('TOKEN'))
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
